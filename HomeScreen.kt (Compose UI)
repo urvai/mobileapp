@@ -1,0 +1,34 @@
+package com.focusmate.ui.home
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.focusmate.data.model.Task
+import com.focusmate.viewmodel.TaskViewModel
+import com.focusmate.ui.components.TaskItem
+
+@Composable
+fun HomeScreen(viewModel: TaskViewModel) {
+    val tasks by viewModel.tasks.collectAsState()
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { viewModel.addTask("새 작업") }) {
+                Text("+")
+            }
+        }
+    ) { padding ->
+        LazyColumn(modifier = Modifier.padding(padding)) {
+            items(tasks.size) { index ->
+                TaskItem(
+                    task = tasks[index],
+                    onToggle = { viewModel.toggleTask(it) },
+                    onDelete = { viewModel.deleteTask(it) }
+                )
+            }
+        }
+    }
+}
